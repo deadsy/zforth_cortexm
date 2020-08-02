@@ -50,6 +50,10 @@ clobber: clean
 program: 
 	st-flash write $(BIN_FILE) 0x08000000
 
+.PHONY: format
+format: 
+	./tools/cfmt.py
+
 $(GCC_TBZ):
 	mkdir -p $(DL_DIR)
 	wget $(GCC_URL) -O $(GCC_TBZ)

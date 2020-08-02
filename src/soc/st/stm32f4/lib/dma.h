@@ -24,7 +24,7 @@
 #define DMA_IRQ_HTIF (1U << 4)  // Half-transfer
 #define DMA_IRQ_TCIF (1U << 5)  // Transfer complete
 
-#define DMA_IRQ_ALL (DMA_IRQ_FEIF |DMA_IRQ_DMEIF |DMA_IRQ_TEIF |DMA_IRQ_HTIF |DMA_IRQ_TCIF)
+#define DMA_IRQ_ALL (DMA_IRQ_FEIF | DMA_IRQ_DMEIF | DMA_IRQ_TEIF | DMA_IRQ_HTIF | DMA_IRQ_TCIF)
 
 typedef struct {
 	volatile uint32_t ISR;  // DMA interrupt status register
