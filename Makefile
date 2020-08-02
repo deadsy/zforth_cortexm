@@ -1,11 +1,13 @@
+TOP = .
 
-TARGET ?= mb997c
+DL_DIR = $(TOP)/dl
+SRC_DIR = $(TOP)/src
+XTOOLS_DIR = $(TOP)/xtools
 
-CURRENT_DIR = $(shell pwd)
+TARGET ?= mb997
 
-DL_DIR = $(CURRENT_DIR)/dl
-SRC_DIR = $(CURRENT_DIR)/src
-XTOOLS_DIR = $(CURRENT_DIR)/xtools
+TARGET_DIR = $(SRC_DIR)/target/$(TARGET)
+BIN_FILE = $(TARGET_DIR)/zforth.bin
 
 # cross compilation tools for ARM cortex-m
 GCC_RELEASE = 9-2019q4
@@ -32,23 +34,21 @@ PATCH_CMD = \
 COPY_CMD = tar cf - -C files . | tar xf - -C $(SRC_DIR)
 
 .PHONY: all
-all: .stamp_output
-
-.stamp_output: .stamp_xtools .stamp_build
-	touch $@
-
-.stamp_build: .stamp_src
-	touch $@
+all: .stamp_xtools .stamp_src
+	make -C $(TARGET_DIR) $@
 
 .PHONY: clean
 clean:
-	-rm -rf $(BUILD_DIR) .stamp_build
-	-rm -rf $(SRC_DIR) .stamp_src
-	-rm -rf $(OUTPUT_DIR) .stamp_output
+	make -C $(TARGET_DIR) $@
+	-rm -rf $(ZFORTH_SRC) .stamp_src
 
 .PHONY: clobber
 clobber: clean
 	-rm -rf $(XTOOLS_DIR) .stamp_xtools
+
+.PHONY: program
+program: 
+	st-flash write $(BIN_FILE) 0x08000000
 
 $(GCC_TBZ):
 	mkdir -p $(DL_DIR)
