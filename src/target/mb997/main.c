@@ -232,8 +232,7 @@ exit:
 
 //-----------------------------------------------------------------------------
 
-zf_cell zf_host_parse_num(const char *buf)
-{
+zf_cell zf_host_parse_num(const char *buf) {
 	char *end;
 	zf_cell v = strtol(buf, &end, 0);
 	if(*end != '\0') {
@@ -242,8 +241,7 @@ zf_cell zf_host_parse_num(const char *buf)
 	return v;
 }
 
-zf_input_state zf_host_sys(zf_syscall_id id, const char *input)
-{
+zf_input_state zf_host_sys(zf_syscall_id id, const char *input) {
 	char buf[16];
 
 	switch((int)id) {
