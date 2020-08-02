@@ -53,6 +53,7 @@ INCLUDE += -I$(TOP)/src/soc/st/stm32f4/cmsis
 INCLUDE += -I$(TARGET_DIR)
 INCLUDE += -I$(COMMON_DIR)
 INCLUDE += -I$(COMMON_DIR)/rtt
+INCLUDE += -I$(ZFORTH_DIR)/src/zforth
 
 # defines
 DEFINE = -DSTM32F407xx

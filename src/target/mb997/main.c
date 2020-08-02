@@ -11,6 +11,8 @@ MB997C Board
 #include "utils.h"
 #include "io.h"
 
+#include "zforth.h"
+
 #define DEBUG
 #include "logging.h"
 
@@ -216,10 +218,47 @@ int main(void) {
 
 	DBG("init good\r\n");
 
+	// initialize zforth
+	zf_init(1);
+	zf_bootstrap();
+	zf_eval(": . 1 sys ;");
+
   while(1);
 
  exit:
 	while (1) ;
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
+
+zf_cell zf_host_parse_num(const char *buf)
+{
+	char *end;
+  zf_cell v = strtol(buf, &end, 0);
+	if(*end != '\0') {
+    zf_abort(ZF_ABORT_NOT_A_WORD);
+  }
+  return v;
+}
+
+zf_input_state zf_host_sys(zf_syscall_id id, const char *input)
+{
+	char buf[16];
+
+	switch((int)id) {
+
+		case ZF_SYSCALL_EMIT:
+			putchar((char)zf_pop());
+			fflush(stdout);
+			break;
+
+		case ZF_SYSCALL_PRINT:
+			itoa(zf_pop(), buf, 10);
+			puts(buf);
+			break;
+	}
+
 	return 0;
 }
 

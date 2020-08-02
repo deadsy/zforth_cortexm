@@ -1,0 +1,32 @@
+--- ./src/zforth/src/zforth/zforth.c	2020-08-02 11:38:44.037919744 -0700
++++ ./src/zforth/src/zforth/zforth.c	2020-08-02 11:39:53.382602699 -0700
+@@ -883,13 +883,15 @@
+ {
+ 	zf_result r = (zf_result)setjmp(jmpbuf);
+ 
++  const char *tmp = buf;
++
+ 	if(r == ZF_OK) {
+ 		for(;;) {
+-			handle_char(*buf);
+-			if(*buf == '\0') {
++			handle_char(*tmp);
++			if(*tmp == '\0') {
+ 				return ZF_OK;
+ 			}
+-			buf ++;
++			tmp ++;
+ 		}
+ 	} else {
+ 		COMPILING = 0;
+--- ./src/zforth/src/zforth/zforth.h	2020-08-02 11:45:12.234846683 -0700
++++ ./src/zforth/src/zforth/zforth.h	2020-08-02 11:45:50.057740588 -0700
+@@ -1,6 +1,8 @@
+ #ifndef zforth_h
+ #define zforth_h
+ 
++#include <stdarg.h>
++
+ #include "zfconf.h"
+ 
+ /* Abort reasons */
