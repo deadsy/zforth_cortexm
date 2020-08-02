@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
 /*
 
-GPIO Control for the STM32F4 Discovery Board
+   GPIO Control for the STM32F4 Discovery Board
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #include "stm32f4_soc.h"
@@ -68,8 +68,8 @@ static void set_altfunc(GPIO_TypeDef * gpio, int pin, int af) {
 static void gpio_enable(int port) {
 	// This is for stm32f407
 	// It is different for other SoCs in the STM family
-	RCC->AHB1ENR |= (1 << port);	// clock enable
-	RCC->AHB1LPENR &= ~(1 << port);	// clock enable during sleep mode
+	RCC->AHB1ENR |= (1 << port);    // clock enable
+	RCC->AHB1LPENR &= ~(1 << port); // clock enable during sleep mode
 }
 
 //-----------------------------------------------------------------------------

@@ -50,9 +50,9 @@ def exec_cmd(cmd):
 
 #------------------------------------------------------------------------------
 
-def fmt_zephyr(fname):
-  print("fmt_zephyr on %s" % fname)
-  exec_cmd('%s -c ./tools/uncrustify.cfg -q --no-backup -f %s -o %s' % (uncrustify_exec, fname, fname))
+def fmt_jth(fname):
+  print("fmt_jth on %s" % fname)
+  exec_cmd('%s -c ./tools/jth.cfg -q --no-backup -f %s -o %s' % (uncrustify_exec, fname, fname))
 
 #------------------------------------------------------------------------------
 
@@ -72,8 +72,9 @@ def get_files(dlist, fo_flist, fo_dlist):
 
 # *.c and *.h files in these directories will be auto-formatted.
 src_dirs = (
-	('src/target/mb997', fmt_zephyr),
-	('src/common', fmt_zephyr),
+	('src/target/mb997', fmt_jth),
+	('src/soc/st/stm32f4/lib', fmt_jth),
+	('src/common', fmt_jth),
 )
 
 # don't format directories in this list

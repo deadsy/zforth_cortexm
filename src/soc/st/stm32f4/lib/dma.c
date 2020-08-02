@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
 /*
 
-DMA Driver
+   DMA Driver
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #include <assert.h>
@@ -194,25 +194,25 @@ int dma_init(struct dma_drv *dma, struct dma_cfg *cfg) {
 		goto exit;
 	}
 	// SxCR setup
-	val = cfg->chsel;	// Channel selection
-	val |= cfg->mburst;	// Memory burst transfer
-	val |= cfg->pburst;	// Peripheral burst transfer
-	val |= (0 << 19 /*CT*/);	// Current target (only in double buffer mode)
-	val |= (0 << 18 /*DBM*/);	// Double buffer mode (off)
-	val |= cfg->pl;		// Priority level
-	val |= cfg->pincos;	// Peripheral increment offset
-	val |= cfg->msize;	// Memory data size
-	val |= cfg->psize;	// Peripheral data size
-	val |= cfg->minc;	// Memory increment mode
-	val |= cfg->pinc;	// Peripheral increment mode
-	val |= cfg->circ;	// Circular mode
-	val |= cfg->dir;	// Data transfer direction
-	val |= cfg->pfctrl;	// Peripheral flow controller
+	val = cfg->chsel;       // Channel selection
+	val |= cfg->mburst;     // Memory burst transfer
+	val |= cfg->pburst;     // Peripheral burst transfer
+	val |= (0 << 19 /*CT*/);        // Current target (only in double buffer mode)
+	val |= (0 << 18 /*DBM*/);       // Double buffer mode (off)
+	val |= cfg->pl;         // Priority level
+	val |= cfg->pincos;     // Peripheral increment offset
+	val |= cfg->msize;      // Memory data size
+	val |= cfg->psize;      // Peripheral data size
+	val |= cfg->minc;       // Memory increment mode
+	val |= cfg->pinc;       // Peripheral increment mode
+	val |= cfg->circ;       // Circular mode
+	val |= cfg->dir;        // Data transfer direction
+	val |= cfg->pfctrl;     // Peripheral flow controller
 	// enable all interrupt conditions
-	val |= (1 << 4 /*TCIE*/);	// Transfer complete interrupt enable (enabled)
-	val |= (1 << 3 /*HTIE*/);	// Half transfer interrupt enable  (enabled)
-	val |= (1 << 2 /*TEIE*/);	// Transfer error interrupt enable  (enabled)
-	val |= (1 << 1 /*DMEIE*/);	// Direct mode error interrupt enable  (enabled)
+	val |= (1 << 4 /*TCIE*/);       // Transfer complete interrupt enable (enabled)
+	val |= (1 << 3 /*HTIE*/);       // Half transfer interrupt enable  (enabled)
+	val |= (1 << 2 /*TEIE*/);       // Transfer error interrupt enable  (enabled)
+	val |= (1 << 1 /*DMEIE*/);      // Direct mode error interrupt enable  (enabled)
 	reg_rmw(&dma->sregs->CR, DMA_SxCR_MASK, val);
 
 	// setup the address registers
@@ -234,9 +234,9 @@ int dma_init(struct dma_drv *dma, struct dma_cfg *cfg) {
 	dma->sregs->NDTR = cfg->nitems;
 
 	// SxFCR setup
-	val = (1 << 7 /*FEIE*/);	// FIFO error interrupt enable (enabled)
-	val |= cfg->fifo;	// fifo control (aka DMDIS, direct mode disable)
-	val |= cfg->fth;	// FIFO threshold selection
+	val = (1 << 7 /*FEIE*/);        // FIFO error interrupt enable (enabled)
+	val |= cfg->fifo;       // fifo control (aka DMDIS, direct mode disable)
+	val |= cfg->fth;        // FIFO threshold selection
 	reg_rmw(&dma->sregs->FCR, DMA_SxFCR_MASK, val);
 
 	// setup the callbacks
@@ -247,7 +247,7 @@ int dma_init(struct dma_drv *dma, struct dma_cfg *cfg) {
 	// clear interrupt flags
 	dma_clr_irq_flags(dma, DMA_IRQ_ALL);
 
- exit:
+exit:
 	return rc;
 }
 

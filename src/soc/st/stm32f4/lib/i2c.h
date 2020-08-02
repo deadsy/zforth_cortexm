@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
 /*
 
-I2C Bit-Bang Driver
+   I2C Bit-Bang Driver
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #ifndef I2C_H
@@ -32,11 +32,11 @@ struct i2c_drv {
 
 //-----------------------------------------------------------------------------
 
-#define I2C_OK 0		// ok
-#define I2C_ERR_BUS -1		// bus error
-#define I2C_ERR_ADR -2		// no response
-#define I2C_ERR_NAK -3		// missing ack
-#define I2C_ERR_SLV -4		// no slave data
+#define I2C_OK 0                // ok
+#define I2C_ERR_BUS -1          // bus error
+#define I2C_ERR_ADR -2          // no response
+#define I2C_ERR_NAK -3          // missing ack
+#define I2C_ERR_SLV -4          // no slave data
 
 //-----------------------------------------------------------------------------
 
@@ -47,6 +47,6 @@ int i2c_scan(struct i2c_drv *bus, uint8_t adr);
 
 //-----------------------------------------------------------------------------
 
-#endif				// I2C_H
+#endif                          // I2C_H
 
 //-----------------------------------------------------------------------------

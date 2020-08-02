@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
 /*
 
-SPI/I2S Driver
+   SPI/I2S Driver
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #ifndef SPI_H
@@ -77,27 +77,27 @@ void spi_enable(uint32_t base);
 #define I2S_DMA_RXTX ((1U << 1) | (1U << 0))
 
 struct i2s_cfg {
-	uint32_t base;		// base address of spi/i2s peripheral
-	uint32_t mode;		// operating mode
-	uint32_t standard;	// standard used
-	uint32_t data_format;	// data format
-	uint32_t mckoe;		// is the master clock output enabled?
-	uint32_t cpol;		// clock polarity
-	uint32_t fs;		// audio sample rate
-	uint32_t dma;		// dma control
+	uint32_t base;          // base address of spi/i2s peripheral
+	uint32_t mode;          // operating mode
+	uint32_t standard;      // standard used
+	uint32_t data_format;   // data format
+	uint32_t mckoe;         // is the master clock output enabled?
+	uint32_t cpol;          // clock polarity
+	uint32_t fs;            // audio sample rate
+	uint32_t dma;           // dma control
 };
 
 struct i2s_drv {
-	struct i2s_cfg cfg;	// configuration values
-	SPI_TypeDef *regs;	// SPI/I2S peripheral registers
+	struct i2s_cfg cfg;     // configuration values
+	SPI_TypeDef *regs;      // SPI/I2S peripheral registers
 };
 
 static inline void i2s_enable(struct i2s_drv *i2s) {
-	i2s->regs->I2SCFGR |= (1 << 10);	// I2SE
+	i2s->regs->I2SCFGR |= (1 << 10);        // I2SE
 }
 
 static inline void i2s_disable(struct i2s_drv *i2s) {
-	i2s->regs->I2SCFGR &= ~(1 << 10);	// I2SE
+	i2s->regs->I2SCFGR &= ~(1 << 10);       // I2SE
 }
 
 int i2s_init(struct i2s_drv *i2s, struct i2s_cfg *cfg);
@@ -145,30 +145,30 @@ uint32_t get_i2sclk(void);
 #define SPI_SPE (1U << 6)
 
 struct spi_cfg {
-	uint32_t base;		// base address of spi peripheral
-	uint32_t mode;		// master/slave mode
-	uint32_t cpol;		// clock polarity
-	uint32_t cpha;		// clock phase
-	uint32_t lsb;		// msb/lsb first
-	uint32_t div;		// baud rate divisor
+	uint32_t base;          // base address of spi peripheral
+	uint32_t mode;          // master/slave mode
+	uint32_t cpol;          // clock polarity
+	uint32_t cpha;          // clock phase
+	uint32_t lsb;           // msb/lsb first
+	uint32_t div;           // baud rate divisor
 };
 
 struct spi_drv {
-	struct spi_cfg cfg;	// configuration values
-	SPI_TypeDef *regs;	// SPI/I2S peripheral registers
-	int bits;		// current 8/16 bit mode
+	struct spi_cfg cfg;     // configuration values
+	SPI_TypeDef *regs;      // SPI/I2S peripheral registers
+	int bits;               // current 8/16 bit mode
 };
 
 #elif defined(SPI_DRIVER_BITBANG)
 
 struct spi_cfg {
-	int clk;		// clock gpio
-	int mosi;		// mosi gpio
-	int miso;		// miso gpio
-	int cpol;		// clock polarity, 0 = normally low, 1 = normally high
-	int cpha;		// clock edge to capture miso on, 0 = 1st edge, 1 = 2nd edge
-	int lsb;		// least significant bit first
-	int delay;		// clock delay in usecs
+	int clk;                // clock gpio
+	int mosi;               // mosi gpio
+	int miso;               // miso gpio
+	int cpol;               // clock polarity, 0 = normally low, 1 = normally high
+	int cpha;               // clock edge to capture miso on, 0 = 1st edge, 1 = 2nd edge
+	int lsb;                // least significant bit first
+	int delay;              // clock delay in usecs
 };
 
 struct spi_drv {
@@ -192,6 +192,6 @@ void spi_rxbuf8(struct spi_drv *spi, uint8_t * buf, size_t n);
 
 //-----------------------------------------------------------------------------
 
-#endif				// SPI_H
+#endif                          // SPI_H
 
 //-----------------------------------------------------------------------------

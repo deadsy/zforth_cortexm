@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
 /*
 
-ADC Driver
+   ADC Driver
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #ifndef ADC_H
@@ -18,18 +18,18 @@ ADC Driver
 //-----------------------------------------------------------------------------
 
 struct adc_cfg {
-	uint32_t base;		// base address
+	uint32_t base;          // base address
 };
 
 struct adc_drv {
-	ADC_Common_TypeDef *cregs;	// common registers
-	ADC_TypeDef *regs;	// specific adc registers
+	ADC_Common_TypeDef *cregs;      // common registers
+	ADC_TypeDef *regs;      // specific adc registers
 };
 
 int adc_init(struct adc_drv *adc, struct adc_cfg *cfg);
 
 //-----------------------------------------------------------------------------
 
-#endif				// ADC_H
+#endif                          // ADC_H
 
 //-----------------------------------------------------------------------------

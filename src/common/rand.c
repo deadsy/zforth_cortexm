@@ -1,11 +1,11 @@
 //-----------------------------------------------------------------------------
 /*
 
-Simple random number generation
+   Simple random number generation
 
-Based on a linear congruential generator.
+   Based on a linear congruential generator.
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #include "utils.h"

@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
 /*
 
-MB997C Board
+   MB997C Board
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #include "stm32f4_soc.h"
@@ -60,12 +60,12 @@ static const struct gpio_info gpios[] = {
 
 #ifdef USE_FULL_ASSERT
 void assert_failed(uint8_t * file, uint32_t line) {
-	while (1) ;
+	while (1);
 }
 #endif
 
 void Error_Handler(void) {
-	while (1) ;
+	while (1);
 }
 
 //-----------------------------------------------------------------------------
@@ -73,16 +73,16 @@ void Error_Handler(void) {
 void NMI_Handler(void) {
 }
 void HardFault_Handler(void) {
-	while (1) ;
+	while (1);
 }
 void MemManage_Handler(void) {
-	while (1) ;
+	while (1);
 }
 void BusFault_Handler(void) {
-	while (1) ;
+	while (1);
 }
 void UsageFault_Handler(void) {
-	while (1) ;
+	while (1);
 }
 void SVC_Handler(void) {
 }
@@ -223,10 +223,10 @@ int main(void) {
 	zf_bootstrap();
 	zf_eval(": . 1 sys ;");
 
-  while(1);
+	while(1);
 
- exit:
-	while (1) ;
+exit:
+	while (1);
 	return 0;
 }
 
@@ -235,11 +235,11 @@ int main(void) {
 zf_cell zf_host_parse_num(const char *buf)
 {
 	char *end;
-  zf_cell v = strtol(buf, &end, 0);
+	zf_cell v = strtol(buf, &end, 0);
 	if(*end != '\0') {
-    zf_abort(ZF_ABORT_NOT_A_WORD);
-  }
-  return v;
+		zf_abort(ZF_ABORT_NOT_A_WORD);
+	}
+	return v;
 }
 
 zf_input_state zf_host_sys(zf_syscall_id id, const char *input)
@@ -248,15 +248,15 @@ zf_input_state zf_host_sys(zf_syscall_id id, const char *input)
 
 	switch((int)id) {
 
-		case ZF_SYSCALL_EMIT:
-			putchar((char)zf_pop());
-			fflush(stdout);
-			break;
+	case ZF_SYSCALL_EMIT:
+		putchar((char)zf_pop());
+		fflush(stdout);
+		break;
 
-		case ZF_SYSCALL_PRINT:
-			itoa(zf_pop(), buf, 10);
-			puts(buf);
-			break;
+	case ZF_SYSCALL_PRINT:
+		itoa(zf_pop(), buf, 10);
+		puts(buf);
+		break;
 	}
 
 	return 0;

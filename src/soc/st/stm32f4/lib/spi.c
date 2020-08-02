@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
 /*
 
-SPI Driver
+   SPI Driver
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #include <string.h>
@@ -47,7 +47,7 @@ static inline uint32_t spi_bsy(struct spi_drv *spi) {
 
 // wait for the spi operation to complete
 void spi_wait4_done(struct spi_drv *spi) {
-	while (spi_bsy(spi)) ;
+	while (spi_bsy(spi));
 }
 
 //-----------------------------------------------------------------------------
@@ -95,7 +95,7 @@ static void spi_set_bits(struct spi_drv *spi, int bits) {
 void spi_tx8(struct spi_drv *spi, uint8_t data, size_t n) {
 	spi_set_bits(spi, 8);
 	for (size_t i = 0; i < n; i++) {
-		while (!spi_txe(spi)) ;
+		while (!spi_txe(spi));
 		spi->regs->DR = data;
 	}
 }
@@ -104,7 +104,7 @@ void spi_tx8(struct spi_drv *spi, uint8_t data, size_t n) {
 void spi_txbuf8(struct spi_drv *spi, const uint8_t * buf, size_t n) {
 	spi_set_bits(spi, 8);
 	for (size_t i = 0; i < n; i++) {
-		while (!spi_txe(spi)) ;
+		while (!spi_txe(spi));
 		spi->regs->DR = buf[i];
 	}
 }
@@ -113,7 +113,7 @@ void spi_txbuf8(struct spi_drv *spi, const uint8_t * buf, size_t n) {
 void spi_tx16(struct spi_drv *spi, uint16_t data, size_t n) {
 	spi_set_bits(spi, 16);
 	for (size_t i = 0; i < n; i++) {
-		while (!spi_txe(spi)) ;
+		while (!spi_txe(spi));
 		spi->regs->DR = data;
 	}
 }
@@ -135,33 +135,33 @@ int spi_init(struct spi_drv *spi, struct spi_cfg *cfg) {
 
 	// setup CR1
 	val = 0;
-	val |= (0 << 15 /*BIDIMODE*/);	// Bidirectional data mode enable
-	val |= (0 << 14 /*BIDIOE*/);	// Output enable in bidirectional mode
-	val |= (0 << 13 /*CRCEN*/);	// Hardware CRC calculation enable
-	val |= (0 << 12 /*CRCNEXT*/);	// CRC transfer next
-	val |= (0 << 10 /*RXONLY*/);	// Receive only
+	val |= (0 << 15 /*BIDIMODE*/);  // Bidirectional data mode enable
+	val |= (0 << 14 /*BIDIOE*/);    // Output enable in bidirectional mode
+	val |= (0 << 13 /*CRCEN*/);     // Hardware CRC calculation enable
+	val |= (0 << 12 /*CRCNEXT*/);   // CRC transfer next
+	val |= (0 << 10 /*RXONLY*/);    // Receive only
 	// note: software drives the slave chip select as a normal GPIO
-	val |= (1 << 9 /*SSM*/);	// Software slave management
-	val |= (1 << 8 /*SSI*/);	// Internal slave select
-	val |= spi->cfg.lsb;	// msb/lsb first
-	val |= spi->cfg.div;	// Baud rate control
-	val |= spi->cfg.mode;	// Master selection
-	val |= spi->cfg.cpol;	// Clock polarity
-	val |= spi->cfg.cpha;	// Clock phase
+	val |= (1 << 9 /*SSM*/);        // Software slave management
+	val |= (1 << 8 /*SSI*/);        // Internal slave select
+	val |= spi->cfg.lsb;    // msb/lsb first
+	val |= spi->cfg.div;    // Baud rate control
+	val |= spi->cfg.mode;   // Master selection
+	val |= spi->cfg.cpol;   // Clock polarity
+	val |= spi->cfg.cpha;   // Clock phase
 	reg_rmw(&spi->regs->CR1, CR1_MASK, val);
 	// default to 8 bits per frame
 	spi_set_bits(spi, 8);
 
 	// setup CR2
 	val = 0;
-	val |= (0 << 7 /*TXEIE*/);	// Tx buffer empty interrupt enable
-	val |= (0 << 6 /*RXNEIE*/);	// RX buffer not empty interrupt enable
-	val |= (0 << 5 /*ERRIE*/);	// Error interrupt enable
-	val |= (0 << 4 /*FRF*/);	// Frame format
+	val |= (0 << 7 /*TXEIE*/);      // Tx buffer empty interrupt enable
+	val |= (0 << 6 /*RXNEIE*/);     // RX buffer not empty interrupt enable
+	val |= (0 << 5 /*ERRIE*/);      // Error interrupt enable
+	val |= (0 << 4 /*FRF*/);        // Frame format
 	// note: set the SSOE bit to stop the SPI immediately giving a MODF error
-	val |= (1 << 2 /*SSOE*/);	// SS output enable
-	val |= (0 << 1 /*TXDMAEN*/);	// Tx buffer DMA enable
-	val |= (0 << 0 /*RXDMAEN*/);	// Rx buffer DMA enable
+	val |= (1 << 2 /*SSOE*/);       // SS output enable
+	val |= (0 << 1 /*TXDMAEN*/);    // Tx buffer DMA enable
+	val |= (0 << 0 /*RXDMAEN*/);    // Rx buffer DMA enable
 	reg_rmw(&spi->regs->CR2, CR2_MASK, val);
 
 	// TODO configure CRC operation

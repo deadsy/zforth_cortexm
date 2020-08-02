@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
 /*
 
-USART Driver
+   USART Driver
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #ifndef USART_H
@@ -17,15 +17,15 @@ USART Driver
 
 //-----------------------------------------------------------------------------
 
-#define TXBUF_SIZE 32		// must be a power of 2
-#define RXBUF_SIZE 32		// must be a power of 2
+#define TXBUF_SIZE 32           // must be a power of 2
+#define RXBUF_SIZE 32           // must be a power of 2
 
 struct usart_cfg {
-	uint32_t base;		// base address of usart peripheral
-	int baud;		// baud rate
-	int data;		// data bits
-	int parity;		// parity bits
-	int stop;		// stop bits
+	uint32_t base;          // base address of usart peripheral
+	int baud;               // baud rate
+	int data;               // data bits
+	int parity;             // parity bits
+	int stop;               // stop bits
 };
 
 struct usart_drv {
@@ -52,6 +52,6 @@ char usart_getc(struct usart_drv *usart);
 
 //-----------------------------------------------------------------------------
 
-#endif				// USART_H
+#endif                          // USART_H
 
 //-----------------------------------------------------------------------------

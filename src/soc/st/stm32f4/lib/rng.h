@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
 /*
 
-Random Number Generator Driver
+   Random Number Generator Driver
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #ifndef RNG_H
@@ -17,19 +17,19 @@ Random Number Generator Driver
 
 //-----------------------------------------------------------------------------
 
-#define RNG_MODE_POLLED (0U << 3/*IE*/)
-#define RNG_MODE_INTERRUPT (1U << 3/*IE*/)
+#define RNG_MODE_POLLED (0U << 3 /*IE*/)
+#define RNG_MODE_INTERRUPT (1U << 3 /*IE*/)
 
 struct rng_drv {
 	RNG_TypeDef *regs;
-	void (*err_callback) (struct rng_drv * rng, uint32_t errors);	// errors callback
-	void (*data_callback) (struct rng_drv * rng, uint32_t data);	// data callback
+	void (*err_callback) (struct rng_drv * rng, uint32_t errors);   // errors callback
+	void (*data_callback) (struct rng_drv * rng, uint32_t data);    // data callback
 };
 
 struct rng_cfg {
 	uint32_t mode;
-	void (*err_callback) (struct rng_drv * rng, uint32_t errors);	// errors callback
-	void (*data_callback) (struct rng_drv * rng, uint32_t data);	// data callback
+	void (*err_callback) (struct rng_drv * rng, uint32_t errors);   // errors callback
+	void (*data_callback) (struct rng_drv * rng, uint32_t data);    // data callback
 };
 
 static inline void rng_enable(struct rng_drv *rng) {
@@ -46,6 +46,6 @@ void rng_isr(struct rng_drv *rng);
 
 //-----------------------------------------------------------------------------
 
-#endif				// RNG_H
+#endif                          // RNG_H
 
 //-----------------------------------------------------------------------------

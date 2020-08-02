@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
 /*
 
-USART Driver
+   USART Driver
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #include <string.h>
@@ -73,7 +73,7 @@ static uint32_t usart_get_brr(uint32_t clk, int baud, int over) {
 	uint32_t div = (16 * clk) / (over * baud);
 	uint32_t frac = div & 15;
 	if (over == 8) {
-		frac >>= 1;	// div[3] == 0
+		frac >>= 1;     // div[3] == 0
 	}
 	return (div & ~15) | frac;
 }
@@ -91,7 +91,7 @@ static void usart_set_baud(struct usart_drv *usart, int baud) {
 void usart_putc(struct usart_drv *usart, char c) {
 	int tx_wr_inc = INC_MOD(usart->tx_wr, TXBUF_SIZE);
 	// wait for space
-	while (tx_wr_inc == usart->tx_rd) ;
+	while (tx_wr_inc == usart->tx_rd);
 	// put the character in the tx buffer
 	NVIC_DisableIRQ(usart->irq);
 	usart->txbuf[usart->tx_wr] = c;
@@ -102,7 +102,7 @@ void usart_putc(struct usart_drv *usart, char c) {
 }
 
 void usart_flush(struct usart_drv *usart) {
-	while (usart->tx_wr != usart->tx_rd) ;
+	while (usart->tx_wr != usart->tx_rd);
 }
 
 // return non-zero if we have rx data
@@ -112,7 +112,7 @@ int usart_tstc(struct usart_drv *usart) {
 
 char usart_getc(struct usart_drv *usart) {
 	// wait for a character
-	while (usart_tstc(usart) == 0) ;
+	while (usart_tstc(usart) == 0);
 	NVIC_DisableIRQ(usart->irq);
 	char c = usart->rxbuf[usart->rx_rd];
 	usart->rx_rd = INC_MOD(usart->rx_rd, RXBUF_SIZE);
@@ -194,50 +194,50 @@ int usart_init(struct usart_drv *usart, struct usart_cfg *cfg) {
 
 	// Control register 1
 	val = 0;
-	val |= (0 << 15 /*OVER8 */ );	// Oversampling mode
-	val |= (0 << 13 /*UE*/);	// USART enable
-	val |= (0 << 12 /*M*/);	// Word length
-	val |= (0 << 11 /*WAKE*/);	// Wakeup method
-	val |= (0 << 10 /*PCE*/);	// Parity control enable
-	val |= (0 << 9 /*PS*/);	// Parity selection
-	val |= (0 << 8 /*PEIE*/);	// PE interrupt enable
-	val |= (0 << 7 /*TXEIE*/);	// TXE interrupt enable
-	val |= (0 << 6 /*TCIE*/);	// Transmission complete interrupt enable
-	val |= (1 << 5 /*RXNEIE*/);	// RXNE interrupt enable
-	val |= (0 << 4 /*IDLEIE*/);	// IDLE interrupt enable
-	val |= (1 << 3 /*TE*/);	// Transmitter enable
-	val |= (1 << 2 /*RE*/);	// Receiver enable
-	val |= (0 << 1 /*RWU*/);	// Receiver wakeup
-	val |= (0 << 0 /*SBK*/);	// Send break
+	val |= (0 << 15 /*OVER8 */ );   // Oversampling mode
+	val |= (0 << 13 /*UE*/);        // USART enable
+	val |= (0 << 12 /*M*/); // Word length
+	val |= (0 << 11 /*WAKE*/);      // Wakeup method
+	val |= (0 << 10 /*PCE*/);       // Parity control enable
+	val |= (0 << 9 /*PS*/); // Parity selection
+	val |= (0 << 8 /*PEIE*/);       // PE interrupt enable
+	val |= (0 << 7 /*TXEIE*/);      // TXE interrupt enable
+	val |= (0 << 6 /*TCIE*/);       // Transmission complete interrupt enable
+	val |= (1 << 5 /*RXNEIE*/);     // RXNE interrupt enable
+	val |= (0 << 4 /*IDLEIE*/);     // IDLE interrupt enable
+	val |= (1 << 3 /*TE*/); // Transmitter enable
+	val |= (1 << 2 /*RE*/); // Receiver enable
+	val |= (0 << 1 /*RWU*/);        // Receiver wakeup
+	val |= (0 << 0 /*SBK*/);        // Send break
 	reg_rmw(&usart->regs->CR1, USART_CR1_MASK, val);
 
 	// Control register 2
 	val = 0;
-	val |= (0 << 14 /*LINEN*/);	// LIN mode enable
-	val |= (0 << 12 /*STOP*/);	// STOP bits
-	val |= (0 << 11 /*CLKEN*/);	// Clock enable
-	val |= (0 << 10 /*CPOL*/);	// Clock polarity
-	val |= (0 << 9 /*CPHA*/);	// Clock phase
-	val |= (0 << 8 /*LBCL*/);	// Last bit clock pulse
-	val |= (0 << 6 /*LBDIE*/);	// LIN break detection interrupt enable
-	val |= (0 << 5 /*LBDL*/);	// lin break detection length
-	val |= (0 << 0 /*ADD*/);	// Address of the USART node
+	val |= (0 << 14 /*LINEN*/);     // LIN mode enable
+	val |= (0 << 12 /*STOP*/);      // STOP bits
+	val |= (0 << 11 /*CLKEN*/);     // Clock enable
+	val |= (0 << 10 /*CPOL*/);      // Clock polarity
+	val |= (0 << 9 /*CPHA*/);       // Clock phase
+	val |= (0 << 8 /*LBCL*/);       // Last bit clock pulse
+	val |= (0 << 6 /*LBDIE*/);      // LIN break detection interrupt enable
+	val |= (0 << 5 /*LBDL*/);       // lin break detection length
+	val |= (0 << 0 /*ADD*/);        // Address of the USART node
 	reg_rmw(&usart->regs->CR2, USART_CR2_MASK, val);
 
 	// Control register 3
 	val = 0;
-	val |= (0 << 11 /*ONEBIT*/);	// One sample bit method enable
-	val |= (0 << 10 /*CTSIE*/);	// CTS interrupt enable
-	val |= (0 << 9 /*CTSE*/);	// CTS enable
-	val |= (0 << 8 /*RTSE*/);	// RTS enable
-	val |= (0 << 7 /*DMAT*/);	// DMA enable transmitter
-	val |= (0 << 6 /*DMAR*/);	// DMA enable receiver
-	val |= (0 << 5 /*SCEN*/);	// Smartcard mode enable
-	val |= (0 << 4 /*NACK*/);	// Smartcard NACK enable
-	val |= (0 << 3 /*HDSEL*/);	// Half-duplex selection
-	val |= (0 << 2 /*IRLP*/);	// IrDA low-power
-	val |= (0 << 1 /*IREN*/);	// IrDA mode enable
-	val |= (0 << 0 /*EIE*/);	// Error interrupt enable
+	val |= (0 << 11 /*ONEBIT*/);    // One sample bit method enable
+	val |= (0 << 10 /*CTSIE*/);     // CTS interrupt enable
+	val |= (0 << 9 /*CTSE*/);       // CTS enable
+	val |= (0 << 8 /*RTSE*/);       // RTS enable
+	val |= (0 << 7 /*DMAT*/);       // DMA enable transmitter
+	val |= (0 << 6 /*DMAR*/);       // DMA enable receiver
+	val |= (0 << 5 /*SCEN*/);       // Smartcard mode enable
+	val |= (0 << 4 /*NACK*/);       // Smartcard NACK enable
+	val |= (0 << 3 /*HDSEL*/);      // Half-duplex selection
+	val |= (0 << 2 /*IRLP*/);       // IrDA low-power
+	val |= (0 << 1 /*IREN*/);       // IrDA mode enable
+	val |= (0 << 0 /*EIE*/);        // Error interrupt enable
 	reg_rmw(&usart->regs->CR3, USART_CR3_MASK, val);
 
 	// Clear Status register

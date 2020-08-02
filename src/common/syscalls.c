@@ -1,11 +1,11 @@
 //-----------------------------------------------------------------------------
 /*
 
-Re-entrant syscall hooks for the newlib library.
-See libc.pdf in the gnu tool files.
-See http://www.eistec.se/docs/contiki/a01137_source.html
+   Re-entrant syscall hooks for the newlib library.
+   See libc.pdf in the gnu tool files.
+   See http://www.eistec.se/docs/contiki/a01137_source.html
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #include <unistd.h>
@@ -24,7 +24,7 @@ See http://www.eistec.se/docs/contiki/a01137_source.html
 //-----------------------------------------------------------------------------
 // low level read/write functions
 
-#if defined(STDIO_SERIAL)	// stdio to the serial port
+#if defined(STDIO_SERIAL)       // stdio to the serial port
 
 #include "stm32f4_soc.h"
 
@@ -43,7 +43,7 @@ static _ssize_t io_read_r(struct _reent *ptr, int fd, void *buf, size_t cnt) {
 			prev_char = -1;
 		} else {
 			// block until we get a character
-			while (usart_tstc(&serial_drv) == 0) ;
+			while (usart_tstc(&serial_drv) == 0);
 			c = usart_getc(&serial_drv);
 		}
 		// handle a backspace
@@ -103,7 +103,7 @@ static _ssize_t io_write_r(struct _reent *ptr, int fd, const void *buf, size_t c
 	return cnt;
 }
 
-#elif defined(STDIO_RTT)	// stdio to a Segger style RTT
+#elif defined(STDIO_RTT)        // stdio to a Segger style RTT
 
 static const char crlf[] = "\r\n";
 
@@ -185,11 +185,11 @@ int _fstat_r(struct _reent *ptr, int fd, struct stat *pstat) {
 	switch (fd) {
 	case 0:
 	case 1:
-	case 2:{
-			// say it's a character file
-			pstat->st_mode = S_IFCHR;
-			return 0;
-		}
+	case 2: {
+		// say it's a character file
+		pstat->st_mode = S_IFCHR;
+		return 0;
+	}
 	default:
 		break;
 	}
@@ -202,9 +202,9 @@ off_t _lseek_r(struct _reent * ptr, int fd, off_t pos, int whence) {
 	switch (fd) {
 	case 0:
 	case 1:
-	case 2:{
-			return 0;
-		}
+	case 2: {
+		return 0;
+	}
 	default:
 		break;
 	}
@@ -217,9 +217,9 @@ int _isatty_r(struct _reent *ptr, int fd) {
 	switch (fd) {
 	case 0:
 	case 1:
-	case 2:{
-			return 1;
-		}
+	case 2: {
+		return 1;
+	}
 	default:
 		break;
 	}
@@ -253,10 +253,10 @@ int _unlink_r(struct _reent *ptr, const char *file) {
 //-----------------------------------------------------------------------------
 // memory allocation
 
-register char *stack_ptr __asm__("sp");
+register char *stack_ptr __asm__ ("sp");
 
 void *_sbrk_r(struct _reent *ptr, ptrdiff_t incr) {
-	extern char end __asm__("end");
+	extern char end __asm__ ("end");
 	static char *heap_end;
 	char *prev_heap_end;
 
@@ -282,7 +282,7 @@ void *_sbrk_r(struct _reent *ptr, ptrdiff_t incr) {
 
 void _exit(int status) {
 	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
-	while (1) ;
+	while (1);
 }
 
 int _execve_r(struct _reent *ptr, const char *name, char *const argv[], char *const env[]) {

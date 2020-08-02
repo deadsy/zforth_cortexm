@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
 /*
 
-GPIO Control for the STM32F4 Discovery Board
+   GPIO Control for the STM32F4 Discovery Board
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #ifndef GPIO_H
@@ -32,25 +32,25 @@ GPIO Control for the STM32F4 Discovery Board
 #define PORTI 8
 
 // pin modes
-#define GPIO_MODER_IN 0		// Input mode (reset state)
-#define GPIO_MODER_OUT 1	// General purpose output mode
-#define GPIO_MODER_AF 2		// Alternate function mode
-#define GPIO_MODER_AN 3		// Analog mode
+#define GPIO_MODER_IN 0         // Input mode (reset state)
+#define GPIO_MODER_OUT 1        // General purpose output mode
+#define GPIO_MODER_AF 2         // Alternate function mode
+#define GPIO_MODER_AN 3         // Analog mode
 
 // output type
-#define GPIO_OTYPER_PP 0	// Output push-pull (reset state)
-#define GPIO_OTYPER_OD 1	// Output open-drain
+#define GPIO_OTYPER_PP 0        // Output push-pull (reset state)
+#define GPIO_OTYPER_OD 1        // Output open-drain
 
 // output speed
-#define GPIO_OSPEEDR_LO 0	// Low speed
-#define GPIO_OSPEEDR_MED 1	// Medium speed
-#define GPIO_OSPEEDR_FAST 2	// Fast speed
-#define GPIO_OSPEEDR_HI 3	// High speed
+#define GPIO_OSPEEDR_LO 0       // Low speed
+#define GPIO_OSPEEDR_MED 1      // Medium speed
+#define GPIO_OSPEEDR_FAST 2     // Fast speed
+#define GPIO_OSPEEDR_HI 3       // High speed
 
 // pull up/down
-#define GPIO_PUPD_NONE 0	// No pull-up, pull-down
-#define GPIO_PUPD_PU 1		// Pull-up
-#define GPIO_PUPD_PD 2		// Pull-down
+#define GPIO_PUPD_NONE 0        // No pull-up, pull-down
+#define GPIO_PUPD_PU 1          // Pull-up
+#define GPIO_PUPD_PD 2          // Pull-down
 
 // alternate functions
 #define GPIO_AF0 0
@@ -82,13 +82,13 @@ GPIO Control for the STM32F4 Discovery Board
 //-----------------------------------------------------------------------------
 
 struct gpio_info {
-	int num;		// gpio number
-	int mode;		// pin mode
-	int type;		// output type
-	int speed;		// outputpin speed
-	int pupd;		// pull up/down
-	int af;			// alternate function
-	int init;		// initial pin value
+	int num;                // gpio number
+	int mode;               // pin mode
+	int type;               // output type
+	int speed;              // outputpin speed
+	int pupd;               // pull up/down
+	int af;                 // alternate function
+	int init;               // initial pin value
 };
 
 //-----------------------------------------------------------------------------
@@ -131,6 +131,6 @@ int gpio_init(const struct gpio_info *info, size_t n);
 
 //-----------------------------------------------------------------------------
 
-#endif				// GPIO_H
+#endif                          // GPIO_H
 
 //-----------------------------------------------------------------------------

@@ -1,13 +1,13 @@
 //-----------------------------------------------------------------------------
 /*
 
-Random Number Generator Driver
+   Random Number Generator Driver
 
-Notes:
-On the STM32F407 running at 168 MHz, 1024*1024 words are generated in 918ms.
-ie: 0.88us/word, or 147 cycles/word.
+   Notes:
+   On the STM32F407 running at 168 MHz, 1024*1024 words are generated in 918ms.
+   ie: 0.88us/word, or 147 cycles/word.
 
-*/
+ */
 //-----------------------------------------------------------------------------
 
 #include <string.h>
