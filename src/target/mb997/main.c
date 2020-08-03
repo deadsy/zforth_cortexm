@@ -6,11 +6,12 @@
  */
 //-----------------------------------------------------------------------------
 
+#include <stdlib.h>
+
 #include "stm32f4_soc.h"
 #include "debounce.h"
 #include "utils.h"
 #include "io.h"
-
 #include "zforth.h"
 
 #define DEBUG
@@ -166,20 +167,20 @@ uint32_t debounce_input(void) {
 }
 
 //-----------------------------------------------------------------------------
-// midi port (on USART2)
+// console port (on USART2)
 
-struct usart_cfg midi_serial_cfg = {
+struct usart_cfg console_cfg = {
 	.base = USART2_BASE,
-	.baud = 31250,
+	.baud = 115200,
 	.data = 8,
 	.parity = 0,
 	.stop = 1,
 };
 
-struct usart_drv midi_serial;
+struct usart_drv console;
 
 void USART2_IRQHandler(void) {
-	usart_isr(&midi_serial);
+	usart_isr(&console);
 }
 
 //-----------------------------------------------------------------------------
@@ -207,7 +208,7 @@ int main(void) {
 		goto exit;
 	}
 
-	rc = usart_init(&midi_serial, &midi_serial_cfg);
+	rc = usart_init(&console, &console_cfg);
 	if (rc != 0) {
 		DBG("usart_init failed %d\r\n", rc);
 		goto exit;
@@ -232,6 +233,31 @@ exit:
 
 //-----------------------------------------------------------------------------
 
+static char *itoa(int x, char *s) {
+	unsigned int ux = (x >= 0) ? x : -x;
+	int i = 0;
+	do {
+		s[i++] = '0' + (ux % 10);
+		ux /= 10;
+	} while (ux != 0);
+	if (x < 0) {
+		s[i++] = '-';
+	}
+	s[i] = 0;
+	i--;
+	int j = 0;
+	while (j < i) {
+		char tmp = s[j];
+		s[j] = s[i];
+		s[i] = tmp;
+		j++;
+		i--;
+	}
+	return s;
+}
+
+//-----------------------------------------------------------------------------
+
 zf_cell zf_host_parse_num(const char *buf) {
 	char *end;
 	zf_cell v = strtol(buf, &end, 0);
@@ -242,22 +268,31 @@ zf_cell zf_host_parse_num(const char *buf) {
 }
 
 zf_input_state zf_host_sys(zf_syscall_id id, const char *input) {
-	char buf[16];
 
 	switch((int)id) {
-
-	case ZF_SYSCALL_EMIT:
-		putchar((char)zf_pop());
-		fflush(stdout);
-		break;
-
-	case ZF_SYSCALL_PRINT:
-		itoa(zf_pop(), buf, 10);
-		puts(buf);
+	case ZF_SYSCALL_EMIT: {
+		usart_putc(&console, (char)zf_pop());
+		usart_flush(&console);
 		break;
 	}
-
+	case ZF_SYSCALL_PRINT: {
+		char buf[32];
+		char *s = buf;
+		itoa(zf_pop(), buf);
+		while (*s != 0) {
+			usart_putc(&console, *s);
+			s++;
+		}
+		break;
+	}
+	}
 	return 0;
+}
+
+int SEGGER_RTT_vprintf(unsigned BufferIndex, const char *sFormat, va_list * pParamList);
+
+void zf_host_trace(const char *fmt, va_list va) {
+	(void)SEGGER_RTT_vprintf(0,fmt,&va);
 }
 
 //-----------------------------------------------------------------------------
