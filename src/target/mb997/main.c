@@ -185,54 +185,6 @@ void USART2_IRQHandler(void) {
 
 //-----------------------------------------------------------------------------
 
-int main(void) {
-	int rc;
-
-	HAL_Init();
-	SystemClock_Config();
-
-	rc = log_init();
-	if (rc != 0) {
-		goto exit;
-	}
-
-	rc = gpio_init(gpios, sizeof(gpios) / sizeof(struct gpio_info));
-	if (rc != 0) {
-		DBG("gpio_init failed %d\r\n", rc);
-		goto exit;
-	}
-
-	rc = debounce_init();
-	if (rc != 0) {
-		DBG("debounce_init failed %d\r\n", rc);
-		goto exit;
-	}
-
-	rc = usart_init(&console, &console_cfg);
-	if (rc != 0) {
-		DBG("usart_init failed %d\r\n", rc);
-		goto exit;
-	}
-	// setup the interrupts for the serial port
-	HAL_NVIC_SetPriority(USART2_IRQn, 10, 0);
-	NVIC_EnableIRQ(USART2_IRQn);
-
-	DBG("init good\r\n");
-
-	// initialize zforth
-	zf_init(1);
-	zf_bootstrap();
-	zf_eval(": . 1 sys ;");
-
-	while(1);
-
-exit:
-	while (1);
-	return 0;
-}
-
-//-----------------------------------------------------------------------------
-
 static char *itoa(int x, char *s) {
 	unsigned int ux = (x >= 0) ? x : -x;
 	int i = 0;
@@ -256,12 +208,83 @@ static char *itoa(int x, char *s) {
 	return s;
 }
 
+static int console_puts(const char *s) {
+	while (*s != 0) {
+		usart_putc(&console, *s);
+		s++;
+	}
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
+
+int main(void) {
+	int rc;
+
+	HAL_Init();
+	SystemClock_Config();
+
+	rc = log_init();
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = gpio_init(gpios, sizeof(gpios) / sizeof(struct gpio_info));
+	if (rc != 0) {
+		DBG("gpio_init failed %d", rc);
+		goto exit;
+	}
+
+	rc = debounce_init();
+	if (rc != 0) {
+		DBG("debounce_init failed %d", rc);
+		goto exit;
+	}
+
+	rc = usart_init(&console, &console_cfg);
+	if (rc != 0) {
+		DBG("usart_init failed %d", rc);
+		goto exit;
+	}
+	// setup the interrupts for the serial port
+	HAL_NVIC_SetPriority(USART2_IRQn, 10, 0);
+	NVIC_EnableIRQ(USART2_IRQn);
+
+	DBG("init good");
+
+	// initialize zforth
+	zf_init(1);
+	zf_bootstrap();
+	zf_eval(": . 1 sys ;");
+
+	for (;;) {
+		char buf[32];
+		unsigned int l = 0;
+		char c = usart_getc(&console);
+		usart_putc(&console, c);
+		if (c == '\r' || c == '\n' || c == ' ') {
+			zf_result r = zf_eval(buf);
+			if (r != ZF_OK) {
+				console_puts("A");
+			}
+			l = 0;
+		} else if (l < sizeof(buf) - 1) {
+			buf[l++] = c;
+		}
+		buf[l] = '\0';
+	}
+
+exit:
+	while (1);
+	return 0;
+}
+
 //-----------------------------------------------------------------------------
 
 zf_cell zf_host_parse_num(const char *buf) {
 	char *end;
 	zf_cell v = strtol(buf, &end, 0);
-	if(*end != '\0') {
+	if (*end != '\0') {
 		zf_abort(ZF_ABORT_NOT_A_WORD);
 	}
 	return v;
@@ -269,7 +292,7 @@ zf_cell zf_host_parse_num(const char *buf) {
 
 zf_input_state zf_host_sys(zf_syscall_id id, const char *input) {
 
-	switch((int)id) {
+	switch ((int)id) {
 	case ZF_SYSCALL_EMIT: {
 		usart_putc(&console, (char)zf_pop());
 		usart_flush(&console);
@@ -277,12 +300,8 @@ zf_input_state zf_host_sys(zf_syscall_id id, const char *input) {
 	}
 	case ZF_SYSCALL_PRINT: {
 		char buf[32];
-		char *s = buf;
 		itoa(zf_pop(), buf);
-		while (*s != 0) {
-			usart_putc(&console, *s);
-			s++;
-		}
+		console_puts(buf);
 		break;
 	}
 	}
@@ -292,7 +311,8 @@ zf_input_state zf_host_sys(zf_syscall_id id, const char *input) {
 int SEGGER_RTT_vprintf(unsigned BufferIndex, const char *sFormat, va_list * pParamList);
 
 void zf_host_trace(const char *fmt, va_list va) {
-	(void)SEGGER_RTT_vprintf(0,fmt,&va);
+	SEGGER_RTT_vprintf(0, fmt, &va);
+	SEGGER_RTT_WriteString(0, "\r");
 }
 
 //-----------------------------------------------------------------------------

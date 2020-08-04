@@ -139,21 +139,21 @@ char **environ = __env;
 // file operations
 
 int _open_r(struct _reent *ptr, const char *file, int flags, int mode) {
-	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
+	DBG("%s: %s() line %d", __FILE__, __func__, __LINE__);
 	// TODO
 	ptr->_errno = ENOENT;
 	return -1;
 }
 
 int _close_r(struct _reent *ptr, int fd) {
-	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
+	DBG("%s: %s() line %d", __FILE__, __func__, __LINE__);
 	// TODO
 	ptr->_errno = EBADF;
 	return -1;
 }
 
 _ssize_t _read_r(struct _reent * ptr, int fd, void *buf, size_t cnt) {
-	//DBG("%s: %s() line %d fd %d cnt %d\r\n", __FILE__, __func__, __LINE__, fd, cnt);
+	//DBG("%s: %s() line %d fd %d cnt %d", __FILE__, __func__, __LINE__, fd, cnt);
 	switch (fd) {
 	case 0:
 	case 1:
@@ -167,7 +167,7 @@ _ssize_t _read_r(struct _reent * ptr, int fd, void *buf, size_t cnt) {
 }
 
 _ssize_t _write_r(struct _reent * ptr, int fd, const void *buf, size_t cnt) {
-	//DBG("%s: %s() line %d fd %d cnt %d\r\n", __FILE__, __func__, __LINE__, fd, cnt);
+	//DBG("%s: %s() line %d fd %d cnt %d", __FILE__, __func__, __LINE__, fd, cnt);
 	switch (fd) {
 	case 0:
 	case 1:
@@ -181,7 +181,7 @@ _ssize_t _write_r(struct _reent * ptr, int fd, const void *buf, size_t cnt) {
 }
 
 int _fstat_r(struct _reent *ptr, int fd, struct stat *pstat) {
-	DBG("%s: %s() line %d fd %d\r\n", __FILE__, __func__, __LINE__, fd);
+	DBG("%s: %s() line %d fd %d", __FILE__, __func__, __LINE__, fd);
 	switch (fd) {
 	case 0:
 	case 1:
@@ -198,7 +198,7 @@ int _fstat_r(struct _reent *ptr, int fd, struct stat *pstat) {
 }
 
 off_t _lseek_r(struct _reent * ptr, int fd, off_t pos, int whence) {
-	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
+	DBG("%s: %s() line %d", __FILE__, __func__, __LINE__);
 	switch (fd) {
 	case 0:
 	case 1:
@@ -213,7 +213,7 @@ off_t _lseek_r(struct _reent * ptr, int fd, off_t pos, int whence) {
 }
 
 int _isatty_r(struct _reent *ptr, int fd) {
-	DBG("%s: %s() line %d fd %d\r\n", __FILE__, __func__, __LINE__, fd);
+	DBG("%s: %s() line %d fd %d", __FILE__, __func__, __LINE__, fd);
 	switch (fd) {
 	case 0:
 	case 1:
@@ -232,20 +232,20 @@ int _isatty(int fd) {
 }
 
 int _link_r(struct _reent *ptr, const char *old, const char *new) {
-	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
+	DBG("%s: %s() line %d", __FILE__, __func__, __LINE__);
 	ptr->_errno = EMLINK;
 	return -1;
 }
 
 int _stat_r(struct _reent *ptr, const char *file, struct stat *pstat) {
 	// say it's a character file
-	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
+	DBG("%s: %s() line %d", __FILE__, __func__, __LINE__);
 	pstat->st_mode = S_IFCHR;
 	return 0;
 }
 
 int _unlink_r(struct _reent *ptr, const char *file) {
-	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
+	DBG("%s: %s() line %d", __FILE__, __func__, __LINE__);
 	ptr->_errno = ENOENT;
 	return -1;
 }
@@ -264,7 +264,7 @@ void *_sbrk_r(struct _reent *ptr, ptrdiff_t incr) {
 		heap_end = &end;
 	}
 
-	DBG("%s: %s() line %d heap_end 0x%p incr %d\r\n", __FILE__, __func__, __LINE__, heap_end, incr);
+	DBG("%s: %s() line %d heap_end 0x%p incr %d", __FILE__, __func__, __LINE__, heap_end, incr);
 
 	prev_heap_end = heap_end;
 	if (heap_end + incr > stack_ptr) {
@@ -281,36 +281,36 @@ void *_sbrk_r(struct _reent *ptr, ptrdiff_t incr) {
 // process control
 
 void _exit(int status) {
-	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
+	DBG("%s: %s() line %d", __FILE__, __func__, __LINE__);
 	while (1);
 }
 
 int _execve_r(struct _reent *ptr, const char *name, char *const argv[], char *const env[]) {
-	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
+	DBG("%s: %s() line %d", __FILE__, __func__, __LINE__);
 	ptr->_errno = ENOMEM;
 	return -1;
 }
 
 int _fork_r(struct _reent *ptr) {
-	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
+	DBG("%s: %s() line %d", __FILE__, __func__, __LINE__);
 	ptr->_errno = ENOTSUP;
 	return -1;
 }
 
 int _wait_r(struct _reent *ptr, int *status) {
-	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
+	DBG("%s: %s() line %d", __FILE__, __func__, __LINE__);
 	ptr->_errno = ECHILD;
 	return -1;
 }
 
 int _kill_r(struct _reent *ptr, int pid, int sig) {
-	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
+	DBG("%s: %s() line %d", __FILE__, __func__, __LINE__);
 	ptr->_errno = EINVAL;
 	return -1;
 }
 
 int _getpid_r(struct _reent *ptr) {
-	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
+	DBG("%s: %s() line %d", __FILE__, __func__, __LINE__);
 	return 1;
 }
 
@@ -318,7 +318,7 @@ int _getpid_r(struct _reent *ptr) {
 // time
 
 clock_t _times_r(struct _reent * ptr, struct tms * ptms) {
-	DBG("%s: %s() line %d\r\n", __FILE__, __func__, __LINE__);
+	DBG("%s: %s() line %d", __FILE__, __func__, __LINE__);
 	ptr->_errno = EACCES;
 	return -1;
 }

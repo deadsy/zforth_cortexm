@@ -25,7 +25,8 @@ int SEGGER_RTT_vprintf(unsigned BufferIndex, const char *sFormat, va_list * pPar
 void log_printf(char *format_msg, ...) {
 	va_list p_args;
 	va_start(p_args, format_msg);
-	(void)SEGGER_RTT_vprintf(0, format_msg, &p_args);
+	SEGGER_RTT_vprintf(0, format_msg, &p_args);
+	SEGGER_RTT_WriteString(0, "\r");
 	va_end(p_args);
 }
 

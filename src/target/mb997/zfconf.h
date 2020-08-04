@@ -46,15 +46,15 @@
  * integer type that suits your needs, or 'float' or 'double' if you need
  * floating point numbers */
 
-typedef float zf_cell;
-#define ZF_CELL_FMT "%.14g"
+typedef int32_t zf_cell;
+#define ZF_CELL_FMT "%d"
 
 
 /* The type to use for pointers and adresses. 'unsigned int' is usually a good
  * choice for best performance and smallest code size */
 
-typedef unsigned int zf_addr;
-#define ZF_ADDR_FMT "%04x"
+typedef uint32_t zf_addr;
+#define ZF_ADDR_FMT "%08x"
 
 
 /* Memory region sizes: dictionary size is given in bytes, stack sizes are
