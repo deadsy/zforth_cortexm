@@ -2,16 +2,14 @@
 # host compilation tools
 HOST_GCC = gcc
 
-# cross compilation tools
+# set the tools path
+XTOOLS_DIR = $(TOP)/xtools
 
-# set the path
-XTOOLS_DIR = /opt/gcc-arm-none-eabi-8-2018-q4-major
+# library paths
+X_LIBGCC_DIR = $(XTOOLS_DIR)/lib/gcc/arm-none-eabi/9.2.1/arm/v5te/hard
+X_LIBC_DIR = $(XTOOLS_DIR)/arm-none-eabi/lib/arm/v5te/hard
 
-# set the version
-X_LIBGCC_DIR = $(XTOOLS_DIR)/lib/gcc/arm-none-eabi/7.2.1/armv7e-m/fpu
-
-# should be ok
-X_LIBC_DIR = $(XTOOLS_DIR)/arm-none-eabi/lib/armv7e-m/fpu
+# tools
 X_GCC = $(XTOOLS_DIR)/bin/arm-none-eabi-gcc
 X_OBJCOPY = $(XTOOLS_DIR)/bin/arm-none-eabi-objcopy
 X_AR = $(XTOOLS_DIR)/bin/arm-none-eabi-ar

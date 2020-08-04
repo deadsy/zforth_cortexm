@@ -37,10 +37,12 @@ static int debounce_ready = 0;
 
 __attribute__ ((weak))
 void debounce_on_handler(uint32_t bits) {
+	(void)bits;
 }
 
 __attribute__ ((weak))
 void debounce_off_handler(uint32_t bits) {
+	(void)bits;
 }
 
 //-----------------------------------------------------------------------------

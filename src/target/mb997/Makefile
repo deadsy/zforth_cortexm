@@ -18,7 +18,7 @@ SRC += $(LIB_DIR)/gpio.c \
 	$(LIB_DIR)/delay.c \
 	$(LIB_DIR)/usart.c \
 
-# $(LIB_DIR)/i2c.c \
+#	$(LIB_DIR)/i2c.c \
 #	$(LIB_DIR)/i2s.c \
 #	$(LIB_DIR)/dma.c \
 #	$(LIB_DIR)/adc.c \
@@ -62,11 +62,11 @@ DEFINE += -DSTDIO_SERIAL
 
 # linker flags
 LDSCRIPT = stm32f407vg_flash.ld
-X_LDFLAGS = -T$(LDSCRIPT) -Wl,-Map,$(OUTPUT).map -Wl,--gc-sections
-
-# unused parameters in the HAL code
-X_CFLAGS += -Wno-unused-parameter
-X_CFLAGS += -Wno-strict-prototypes
+X_LDFLAGS = -T$(LDSCRIPT)
+X_LDFLAGS += -Wl,-Map,$(OUTPUT).map
+X_LDFLAGS += -Wl,--gc-sections
+#X_LDFLAGS += -Wl,-u,_printf_float
+#X_LDFLAGS += -Wl,-u,_scanf_float
 
 .S.o:
 	$(X_GCC) $(INCLUDE) $(DEFINE) $(X_CFLAGS) -c $< -o $@

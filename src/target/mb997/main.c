@@ -219,6 +219,8 @@ zf_cell zf_host_parse_num(const char *buf) {
 }
 
 zf_input_state zf_host_sys(zf_syscall_id id, const char *input) {
+	(void)input;
+
 	switch ((int)id) {
 	case ZF_SYSCALL_EMIT:
 		fputc((char)zf_pop(), stdout);
@@ -284,6 +286,9 @@ int main(void) {
 	zf_eval(": . 1 sys ;");
 
 	fputs("\nzForth for Cortex-M\n", stdout);
+
+	//float x = 1.25;
+	//printf("%f\n", x);
 
 	for (;;) {
 		char buf[256];
