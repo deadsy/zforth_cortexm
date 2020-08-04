@@ -6,8 +6,6 @@
  */
 //-----------------------------------------------------------------------------
 
-#include <stdlib.h>
-
 #include "stm32f4_soc.h"
 #include "debounce.h"
 #include "utils.h"
@@ -169,7 +167,7 @@ uint32_t debounce_input(void) {
 //-----------------------------------------------------------------------------
 // console port (on USART2)
 
-struct usart_cfg console_cfg = {
+struct usart_cfg serial_cfg = {
 	.base = USART2_BASE,
 	.baud = 115200,
 	.data = 8,
@@ -177,43 +175,71 @@ struct usart_cfg console_cfg = {
 	.stop = 1,
 };
 
-struct usart_drv console;
+struct usart_drv serial_drv;
 
 void USART2_IRQHandler(void) {
-	usart_isr(&console);
+	usart_isr(&serial_drv);
 }
 
 //-----------------------------------------------------------------------------
 
-static char *itoa(int x, char *s) {
-	unsigned int ux = (x >= 0) ? x : -x;
-	int i = 0;
-	do {
-		s[i++] = '0' + (ux % 10);
-		ux /= 10;
-	} while (ux != 0);
-	if (x < 0) {
-		s[i++] = '-';
+static const char *abort_msg[] = {
+	"ok", // ZF_OK,
+	"internal error", // ZF_ABORT_INTERNAL_ERROR,
+	"outside memory", // ZF_ABORT_OUTSIDE_MEM,
+	"dstack underrun", // ZF_ABORT_DSTACK_UNDERRUN,
+	"dstack overrun", // ZF_ABORT_DSTACK_OVERRUN,
+	"rstack underrun", // ZF_ABORT_RSTACK_UNDERRUN,
+	"rstack overrun", // ZF_ABORT_RSTACK_OVERRUN,
+	"not a word", // ZF_ABORT_NOT_A_WORD,
+	"compile-only word", // ZF_ABORT_COMPILE_ONLY_WORD,
+	"invalid size", // ZF_ABORT_INVALID_SIZE,
+	"division by zero", // ZF_ABORT_DIVISION_BY_ZERO
+};
+
+#define ABORT_MSG_MAX (sizeof(abort_msg) / sizeof(const char *))
+
+static zf_result do_eval(const char *buf) {
+	zf_result rv = zf_eval(buf);
+	if (rv < ABORT_MSG_MAX) {
+		fprintf(stderr, "%s\n", abort_msg[rv]);
+	} else {
+		fprintf(stderr, "unknown error: %d\n", rv);
 	}
-	s[i] = 0;
-	i--;
-	int j = 0;
-	while (j < i) {
-		char tmp = s[j];
-		s[j] = s[i];
-		s[i] = tmp;
-		j++;
-		i--;
-	}
-	return s;
+	return rv;
 }
 
-static int console_puts(const char *s) {
-	while (*s != 0) {
-		usart_putc(&console, *s);
-		s++;
+zf_cell zf_host_parse_num(const char *buf) {
+	zf_cell v;
+	int r = sscanf(buf, ZF_CELL_FMT, &v);
+	if (r == 0) {
+		zf_abort(ZF_ABORT_NOT_A_WORD);
 	}
-	return 0;
+	return v;
+}
+
+zf_input_state zf_host_sys(zf_syscall_id id, const char *input) {
+	switch ((int)id) {
+	case ZF_SYSCALL_EMIT:
+		fputc((char)zf_pop(), stdout);
+		fflush(stdout);
+		break;
+	case ZF_SYSCALL_PRINT:
+		fprintf(stdout, ZF_CELL_FMT " ", zf_pop());
+		break;
+	default: {
+		printf("unhandled syscall %d\n", id);
+		break;
+	}
+	}
+	return ZF_INPUT_INTERPRET;
+}
+
+int SEGGER_RTT_vprintf(unsigned BufferIndex, const char *sFormat, va_list * pParamList);
+
+void zf_host_trace(const char *fmt, va_list va) {
+	SEGGER_RTT_vprintf(0, fmt, &va);
+	SEGGER_RTT_WriteString(0, "\n");
 }
 
 //-----------------------------------------------------------------------------
@@ -241,7 +267,7 @@ int main(void) {
 		goto exit;
 	}
 
-	rc = usart_init(&console, &console_cfg);
+	rc = usart_init(&serial_drv, &serial_cfg);
 	if (rc != 0) {
 		DBG("usart_init failed %d", rc);
 		goto exit;
@@ -257,62 +283,20 @@ int main(void) {
 	zf_bootstrap();
 	zf_eval(": . 1 sys ;");
 
+	fputs("\nzForth for Cortex-M\n", stdout);
+
 	for (;;) {
-		char buf[32];
-		unsigned int l = 0;
-		char c = usart_getc(&console);
-		usart_putc(&console, c);
-		if (c == '\r' || c == '\n' || c == ' ') {
-			zf_result r = zf_eval(buf);
-			if (r != ZF_OK) {
-				console_puts("A");
-			}
-			l = 0;
-		} else if (l < sizeof(buf) - 1) {
-			buf[l++] = c;
+		char buf[256];
+		if (fgets(buf, sizeof(buf), stdin)) {
+			do_eval(buf);
+		} else {
+			break;
 		}
-		buf[l] = '\0';
 	}
 
 exit:
 	while (1);
 	return 0;
-}
-
-//-----------------------------------------------------------------------------
-
-zf_cell zf_host_parse_num(const char *buf) {
-	char *end;
-	zf_cell v = strtol(buf, &end, 0);
-	if (*end != '\0') {
-		zf_abort(ZF_ABORT_NOT_A_WORD);
-	}
-	return v;
-}
-
-zf_input_state zf_host_sys(zf_syscall_id id, const char *input) {
-
-	switch ((int)id) {
-	case ZF_SYSCALL_EMIT: {
-		usart_putc(&console, (char)zf_pop());
-		usart_flush(&console);
-		break;
-	}
-	case ZF_SYSCALL_PRINT: {
-		char buf[32];
-		itoa(zf_pop(), buf);
-		console_puts(buf);
-		break;
-	}
-	}
-	return 0;
-}
-
-int SEGGER_RTT_vprintf(unsigned BufferIndex, const char *sFormat, va_list * pParamList);
-
-void zf_host_trace(const char *fmt, va_list va) {
-	SEGGER_RTT_vprintf(0, fmt, &va);
-	SEGGER_RTT_WriteString(0, "\r");
 }
 
 //-----------------------------------------------------------------------------
