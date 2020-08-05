@@ -75,8 +75,8 @@ LDSCRIPT = stm32f407vg_flash.ld
 X_LDFLAGS = -T$(LDSCRIPT)
 X_LDFLAGS += -Wl,-Map,$(OUTPUT).map
 X_LDFLAGS += -Wl,--gc-sections
-#X_LDFLAGS += -Wl,-u,_printf_float
-#X_LDFLAGS += -Wl,-u,_scanf_float
+X_LDFLAGS += -Wl,-u,_printf_float
+X_LDFLAGS += -Wl,-u,_scanf_float
 
 .S.o:
 	$(X_GCC) $(INCLUDE) $(DEFINE) $(X_CFLAGS) -c $< -o $@

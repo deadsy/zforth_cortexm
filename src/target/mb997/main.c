@@ -287,8 +287,8 @@ int main(void) {
 
 	fputs("\nzForth for Cortex-M\n", stdout);
 
-	//float x = 1.25;
-	//printf("%f\n", x);
+	float x = 1.12345;
+	printf("%f\n", x);
 
 	for (;;) {
 		char buf[256];
