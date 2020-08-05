@@ -63,10 +63,12 @@ DEFINE += -DSTDIO_SERIAL
 # linker flags
 LDSCRIPT = stm32f407vg_flash.ld
 X_LDFLAGS = -T$(LDSCRIPT)
-X_LDFLAGS += -Wl,-Map,$(OUTPUT).map
-X_LDFLAGS += -Wl,--gc-sections
-#X_LDFLAGS += -Wl,-u,_printf_float
-#X_LDFLAGS += -Wl,-u,_scanf_float
+X_LDFLAGS += -Map $(OUTPUT).map
+X_LDFLAGS += --gc-sections
+X_LDFLAGS += -L$(X_LIBC_DIR)
+X_LDFLAGS += -L$(X_LIBGCC_DIR)
+#X_LDFLAGS += -u _printf_float
+#X_LDFLAGS += -u _scanf_float
 
 .S.o:
 	$(X_GCC) $(INCLUDE) $(DEFINE) $(X_CFLAGS) -c $< -o $@
@@ -76,7 +78,7 @@ X_LDFLAGS += -Wl,--gc-sections
 .PHONY: all clean
 
 all: $(OBJ)
-	$(X_GCC) $(X_CFLAGS) $(X_LDFLAGS) $(OBJ) -lm -o $(OUTPUT)
+	$(X_LD) $(X_LDFLAGS) -o $(OUTPUT) $(OBJ) -lc -lgcc
 	$(X_OBJCOPY) -O binary $(OUTPUT) $(OUTPUT).bin
 
 clean:
