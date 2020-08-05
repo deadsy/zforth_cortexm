@@ -60,15 +60,23 @@ INCLUDE += -I$(ZFORTH_DIR)/src/zforth
 DEFINE = -DSTM32F407xx
 DEFINE += -DSTDIO_SERIAL
 
+# compiler flags
+X_CFLAGS = -Werror -Wall -Wextra -Wstrict-prototypes
+X_CFLAGS += --specs=$(X_SPECS_DIR)/nano.specs
+X_CFLAGS += -O2
+X_CFLAGS += -falign-functions -fomit-frame-pointer -fno-strict-aliasing
+#X_CFLAGS += -mlittle-endian -mthumb-interwork
+#X_CFLAGS += -mfpu=fpv4-sp-d16
+X_CFLAGS += -mthumb -mcpu=cortex-m4 -mfloat-abi=hard
+X_CFLAGS += -std=c99
+
 # linker flags
 LDSCRIPT = stm32f407vg_flash.ld
 X_LDFLAGS = -T$(LDSCRIPT)
-X_LDFLAGS += -Map $(OUTPUT).map
-X_LDFLAGS += --gc-sections
-X_LDFLAGS += -L$(X_LIBC_DIR)
-X_LDFLAGS += -L$(X_LIBGCC_DIR)
-#X_LDFLAGS += -u _printf_float
-#X_LDFLAGS += -u _scanf_float
+X_LDFLAGS += -Wl,-Map,$(OUTPUT).map
+X_LDFLAGS += -Wl,--gc-sections
+#X_LDFLAGS += -Wl,-u,_printf_float
+#X_LDFLAGS += -Wl,-u,_scanf_float
 
 .S.o:
 	$(X_GCC) $(INCLUDE) $(DEFINE) $(X_CFLAGS) -c $< -o $@
@@ -78,7 +86,7 @@ X_LDFLAGS += -L$(X_LIBGCC_DIR)
 .PHONY: all clean
 
 all: $(OBJ)
-	$(X_LD) $(X_LDFLAGS) -o $(OUTPUT) $(OBJ) -lc -lgcc
+	$(X_GCC) $(X_CFLAGS) $(X_LDFLAGS) $(OBJ) -o $(OUTPUT)
 	$(X_OBJCOPY) -O binary $(OUTPUT) $(OUTPUT).bin
 
 clean:

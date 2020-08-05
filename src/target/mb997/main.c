@@ -246,10 +246,6 @@ void zf_host_trace(const char *fmt, va_list va) {
 
 //-----------------------------------------------------------------------------
 
-// stub (called from _libc_init_array)
-void _init(void) {
-}
-
 int main(void) {
 	int rc;
 
