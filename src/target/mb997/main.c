@@ -201,10 +201,12 @@ static const char *abort_msg[] = {
 
 static zf_result do_eval(const char *buf) {
 	zf_result rv = zf_eval(buf);
-	if (rv < ABORT_MSG_MAX) {
-		fprintf(stderr, "%s\n", abort_msg[rv]);
-	} else {
-		fprintf(stderr, "unknown error: %d\n", rv);
+	if (rv != ZF_OK) {
+		if (rv < ABORT_MSG_MAX) {
+			fprintf(stderr, "%s\n", abort_msg[rv]);
+		} else {
+			fprintf(stderr, "unknown error: %d\n", rv);
+		}
 	}
 	return rv;
 }
@@ -223,11 +225,11 @@ zf_input_state zf_host_sys(zf_syscall_id id, const char *input) {
 
 	switch ((int)id) {
 	case ZF_SYSCALL_EMIT:
-		fputc((char)zf_pop(), stdout);
+		putchar((char)zf_pop());
 		fflush(stdout);
 		break;
 	case ZF_SYSCALL_PRINT:
-		fprintf(stdout, ZF_CELL_FMT " ", zf_pop());
+		printf(ZF_CELL_FMT " ", zf_pop());
 		break;
 	default: {
 		printf("unhandled syscall %d\n", id);
@@ -285,10 +287,7 @@ int main(void) {
 	zf_bootstrap();
 	zf_eval(": . 1 sys ;");
 
-	fputs("\nzForth for Cortex-M\n", stdout);
-
-	float x = 1.12345;
-	printf("%f\n", x);
+	puts("\nzForth for Cortex-M\n");
 
 	for (;;) {
 		char buf[256];
