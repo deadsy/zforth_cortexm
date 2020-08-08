@@ -1,6 +1,7 @@
 #ifndef zforth_h
 #define zforth_h
 
+#include <stdarg.h>
 #include "zfconf.h"
 
 /* Abort reasons */

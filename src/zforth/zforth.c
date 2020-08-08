@@ -141,8 +141,10 @@ static const char *op_name(zf_addr addr) {
 
 #else
 static void trace(const char *fmt, ...) {
+	(void)fmt;
 }
 static const char *op_name(zf_addr addr) {
+	(void)addr;
 	return NULL;
 }
 #endif
@@ -854,12 +856,13 @@ zf_result zf_eval(const char *buf) {
 	zf_result r = (zf_result)setjmp(jmpbuf);
 
 	if (r == ZF_OK) {
+		const char *tmp = buf;
 		for (;;) {
-			handle_char(*buf);
-			if (*buf == '\0') {
+			handle_char(*tmp);
+			if (*tmp == '\0') {
 				return ZF_OK;
 			}
-			buf++;
+			tmp++;
 		}
 	} else {
 		COMPILING = 0;
