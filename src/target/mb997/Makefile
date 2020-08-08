@@ -40,7 +40,7 @@ SRC += $(COMMON_DIR)/logging.c \
 
 # zforth
 ZFORTH_DIR = $(TOP)/src/zforth
-SRC += $(ZFORTH_DIR)/src/zforth/zforth.c \
+SRC += $(ZFORTH_DIR)/zforth.c \
 
 OBJ = $(patsubst %.c, %.o, $(SRC))
 OBJ += $(TARGET_DIR)/start.o
@@ -54,7 +54,7 @@ INCLUDE += -I$(TOP)/src/soc/st/stm32f4/cmsis
 INCLUDE += -I$(TARGET_DIR)
 INCLUDE += -I$(COMMON_DIR)
 INCLUDE += -I$(COMMON_DIR)/rtt
-INCLUDE += -I$(ZFORTH_DIR)/src/zforth
+INCLUDE += -I$(ZFORTH_DIR)
 
 # defines
 DEFINE = -DSTM32F407xx
