@@ -45,6 +45,7 @@ typedef enum {
 	PRIM_COUNT
 } zf_prim;
 
+#if ZF_ENABLE_BOOTSTRAP
 static const char prim_names[] =
 	_("exit")    _("lit")        _("<0")    _(":")     _("_;")        _("+")
 	_("-")       _("*")          _("/")     _("%")     _("drop")      _("dup")
@@ -52,7 +53,7 @@ static const char prim_names[] =
 	_("jmp")     _("jmp0")       _("'")     _("_(")    _(">r")        _("r>")
 	_("=")       _("sys")        _("pick")  _(",,")    _("key")       _("lits")
 	_("##")      _("&");
-
+#endif
 
 /* Stacks and dictionary memory */
 
@@ -83,8 +84,10 @@ static jmp_buf jmpbuf;
 #define POSTPONE  uservar[4]    /* flag to indicate next imm word should be compiled */
 #define USERVAR_COUNT 5
 
+#if ZF_ENABLE_BOOTSTRAP
 static const char uservar_names[] =
 	_("h")   _("latest") _("trace")  _("compiling")  _("_postpone");
+#endif
 
 static zf_addr *uservar = (zf_addr *)dict;
 

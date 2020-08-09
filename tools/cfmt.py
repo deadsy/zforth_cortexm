@@ -73,6 +73,7 @@ def get_files(dlist, fo_flist, fo_dlist):
 # *.c and *.h files in these directories will be auto-formatted.
 src_dirs = (
 	('src/target/mb997', fmt_jth),
+	('src/target/linux', fmt_jth),
 	('src/soc/st/stm32f4/lib', fmt_jth),
 	('src/common', fmt_jth),
 	('src/zforth', fmt_jth),

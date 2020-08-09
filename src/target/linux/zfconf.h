@@ -1,15 +1,5 @@
-//-----------------------------------------------------------------------------
-/*
-
-   zForth Configuration
-
- */
-//-----------------------------------------------------------------------------
-
-#ifndef ZFCONF_H
-#define ZFCONF_H
-
-//-----------------------------------------------------------------------------
+#ifndef zfconf
+#define zfconf
 
 /* Set to 1 to add tracing support for debugging and inspection. Requires the
  * zf_host_trace() function to be implemented. Adds about one kB to .text and
@@ -17,7 +7,7 @@
  * tracing at run time when calling zf_init() or by setting the 'trace' user
  * variable to 1 */
 
-#define ZF_ENABLE_TRACE 0
+#define ZF_ENABLE_TRACE 1
 
 
 /* Set to 1 to add boundary checks to stack operations. Increases .text size
@@ -31,7 +21,7 @@
  * leave this out and start by loading a cross-compiled dictionary instead.
  * Enabling adds a few hundred bytes to the .text and .rodata segments */
 
-#define ZF_ENABLE_BOOTSTRAP 0
+#define ZF_ENABLE_BOOTSTRAP 1
 
 
 /* Set to 1 to enable typed access to memory. This allows memory read and write
@@ -47,7 +37,7 @@
  * floating point numbers */
 
 typedef int32_t zf_cell;
-#define ZF_CELL_FMT "%ld"
+#define ZF_CELL_FMT "%d"
 
 
 /* The type to use for pointers and adresses. 'unsigned int' is usually a good
@@ -64,6 +54,4 @@ typedef uint32_t zf_addr;
 #define ZF_DSTACK_SIZE 32
 #define ZF_RSTACK_SIZE 32
 
-#endif // ZFCONF_H
-
-//-----------------------------------------------------------------------------
+#endif
