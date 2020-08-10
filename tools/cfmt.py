@@ -77,6 +77,7 @@ src_dirs = (
 	('src/soc/st/stm32f4/lib', fmt_jth),
 	('src/common', fmt_jth),
 	('src/zforth', fmt_jth),
+	('src/jforth', fmt_jth),
 )
 
 # don't format directories in this list
